@@ -23,7 +23,7 @@ def mail(listings):
     # Create the message
     msg = MIMEText(msg_)
     msg.set_unixfrom('author')
-    msg['To'] = email.utils.formataddr(('Recipient', configs.to_email))
+    msg['To'] = email.utils.formataddr(('Recipient', special_configs.to_email))
     msg['From'] = email.utils.formataddr(('Author', configs.from_email))
     msg['Subject'] = 'Freshly squeezed listings'
 
@@ -38,7 +38,7 @@ def mail(listings):
             server.starttls()
             server.ehlo() # re-identify ourselves over TLS connection
 
-        server.login(configs.email_uname, configs.email_pswd)
-        server.sendmail(configs.from_email, [configs.to_email], msg.as_string())
+        server.login(configs.email_uname, special_configs.email_pswd)
+        server.sendmail(configs.from_email, [special_configs.to_email], msg.as_string())
     finally:
         server.quit()
