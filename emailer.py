@@ -1,42 +1,42 @@
+###
+###
 import smtplib
 import email.utils
 from email.mime.text import MIMEText
 import getpass
+#
+import configs
 
 
-# Prompt the user for connection info
-to_email = raw_input('Recipient: ')
-servername = raw_input('Mail server name: ')
-username = raw_input('Mail user name: ')
-password = getpass.getpass("%s's password: " % username)
+msg_template = "description: %s \n price: %s \n sq ft: %s \n location: %s \n %s\n\n"
 
 
-to_email = 
-servername = 
-username = 
+def mail(listings):
 
-# Create the message
-msg = MIMEText('Test message from PyMOTW.')
-msg.set_unixfrom('author')
-msg['To'] = email.utils.formataddr(('Recipient', to_email))
-msg['From'] = email.utils.formataddr(('Author', 'j.martinez.manso@gmail.com'))
-msg['Subject'] = 'Test from PyMOTW'
+    msg_ = ""
+    for value in listings.values():
+        msg_ = msg_ + msg_template % (value['description'],value['price'],\
+        value["size"],value["location"],value["href"])
 
-server = smtplib.SMTP_SSL(servername,'465')
+    # Create the message
+    msg = MIMEText(msg_)
+    msg.set_unixfrom('author')
+    msg['To'] = email.utils.formataddr(('Recipient', configs.to_email))
+    msg['From'] = email.utils.formataddr(('Author', configs.from_email))
+    msg['Subject'] = 'Freshly squeezed listings'
 
+    server = smtplib.SMTP(configs.email_hostname,configs.email_port)
 
-try:
-    server.set_debuglevel(True)
+    try:
+        server.set_debuglevel(True)
+        # identify ourselves, prompting server for supported features
+        server.ehlo()
+        # If we can encrypt this session, do it
+        if server.has_extn('STARTTLS'):
+            server.starttls()
+            server.ehlo() # re-identify ourselves over TLS connection
 
-    # identify ourselves, prompting server for supported features
-    server.ehlo()
-
-    # If we can encrypt this session, do it
-    if server.has_extn('STARTTLS'):
-        server.starttls()
-        server.ehlo() # re-identify ourselves over TLS connection
-
-    server.login(username, password)
-    server.sendmail('author@example.com', [to_email], msg.as_string())
-finally:
-    server.quit()
+        server.login(configs.email_uname, configs.email_pswd)
+        server.sendmail(configs.from_email, [configs.to_email], msg.as_string())
+    finally:
+        server.quit()
