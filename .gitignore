@@ -1,3 +1,6 @@
 *.pyc
 *DS_?tore*
+<<<<<<< HEAD
 special_configs.py
+=======
+>>>>>>> 86d8d4d6df5bc6247879537769d7c39cc9099695
