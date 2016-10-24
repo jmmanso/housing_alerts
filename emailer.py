@@ -9,6 +9,7 @@ import configs
 import special_configs
 
 
+
 msg_template = "description: %s \n price: %s \n sq ft: %s \n location: %s \n %s\n\n"
 
 
