@@ -1,12 +1,8 @@
-###
-###
 import smtplib
 import email.utils
 from email.mime.text import MIMEText
-import getpass
 #
 import configs
-import special_configs
 
 
 
@@ -14,31 +10,31 @@ msg_template = "description: %s \n price: %s \n sq ft: %s \n location: %s \n %s\
 
 
 def mail(listings):
-
+    """ Compose an email of apartment listings and send to predefined addres """
+    # Compose message body
     msg_ = ""
     for value in listings.values():
         msg_ = msg_ + msg_template % (value['description'],value['price'],\
         value["size"],value["location"],value["href"])
 
-    # Create the message
+    # Create the message object
     msg = MIMEText(msg_)
     msg.set_unixfrom('author')
-    msg['To'] = email.utils.formataddr(('Recipient', special_configs.to_email))
-    msg['From'] = email.utils.formataddr(('Author', configs.from_email))
+    msg['To'] = email.utils.formataddr(('Recipient', configs.to_email_address))
+    msg['From'] = email.utils.formataddr(('Author', configs.from_email_address))
     msg['Subject'] = 'Freshly squeezed listings'
 
-    server = smtplib.SMTP(configs.email_hostname,configs.email_port)
+    server = smtplib.SMTP(configs.from_email_smtpserver, configs.from_email_port)
 
     try:
         server.set_debuglevel(True)
-        # identify ourselves, prompting server for supported features
         server.ehlo()
-        # If we can encrypt this session, do it
+        # see if session can be encrypted
         if server.has_extn('STARTTLS'):
             server.starttls()
-            server.ehlo() # re-identify ourselves over TLS connection
+            server.ehlo()
 
-        server.login(configs.email_uname, special_configs.email_pswd)
-        server.sendmail(configs.from_email, [special_configs.to_email], msg.as_string())
+        server.login(configs.from_email_address, configs.from_email_pswd)
+        server.sendmail(configs.from_email_address, [configs.to_email_address], msg.as_string())
     finally:
         server.quit()
