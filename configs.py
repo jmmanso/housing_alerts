@@ -2,7 +2,7 @@ import os
 thisdir = os.path.dirname(__file__)
 
 # Specify Craigslist search url
-cl_search_url = "https://sfbay.craigslist.org/search/sfc/apa?hasPic=1&nh=4&nh=12&nh=18&max_price=2500&bedrooms=1&bathrooms=1&availabilityMode=0"
+cl_search_url = "https://sfbay.craigslist.org/search/sfc/apa?hasPic=1&nh=4&nh=12&nh=18&max_price=2600&bedrooms=1&bathrooms=1&availabilityMode=0"
 
 # Specify other urls
 dolores_search_url240 = "http://www.240doloresapts.com/floorplan/1x1/"
